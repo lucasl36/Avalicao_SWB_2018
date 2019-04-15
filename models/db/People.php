@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\activerecord;
+namespace app\models\db;
 
 use Yii;
 
@@ -12,14 +12,14 @@ use Yii;
  * @property string $cpfcnpj
  * @property string $rgie
  * @property string $people_type
- * @property string $mail_adress
+ * @property string $mail_address
  * @property string $phone
  * @property string $cell_phone
  * @property string $birth
  * @property int $employess_amount
  *
- * @property TbPeopleAddress[] $tbPeopleAddresses
- * @property TbAddress[] $addresses
+ * @property PeopleAddress[] $peopleAddresses
+ * @property Address[] $addresses
  */
 class People extends \yii\db\ActiveRecord
 {
@@ -37,14 +37,14 @@ class People extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name', 'cpfcnpj', 'rgie', 'people_type', 'mail_adress', 'phone', 'cell_phone'], 'required'],
+            [['name', 'cpfcnpj', 'rgie', 'people_type', 'mail_address', 'phone', 'cell_phone'], 'required'],
             [['id', 'employess_amount'], 'integer'],
             [['birth'], 'safe'],
             [['name'], 'string', 'max' => 125],
             [['cpfcnpj'], 'string', 'max' => 15],
             [['rgie'], 'string', 'max' => 50],
             [['people_type'], 'string', 'max' => 1],
-            [['mail_adress'], 'string', 'max' => 100],
+            [['mail_address'], 'string', 'max' => 100],
             [['phone', 'cell_phone'], 'string', 'max' => 20],
             [['id'], 'unique'],
         ];
@@ -65,4 +65,21 @@ class People extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Address::className(), ['id' => 'address_id'])->viaTable('tb_people_address', ['people_id' => 'id']);
     }
+
+    public static function filter($formModel)
+    {
+        return self::find()
+        ->andFilterCompare('name', $formModel->name, 'like')
+        ->andFilterCompare('cpfcnpj', $formModel->cpfcnpj, 'like')
+        ->andFilterCompare('rgie', $formModel->rgie, 'like')
+        ->andFilterCompare('people_type', $formModel->people_type)
+        ->andFilterCompare('mail_address', $formModel->mail_address, 'like')
+        ->andFilterCompare('phone', $formModel->phone, 'like')
+        ->andFilterCompare('cell_phone', $formModel->cell_phone, 'like')
+        ->andFilterCompare('birth', $formModel->birth)
+        ->andFilterCompare('birth', $formModel->employess_amount)
+        ->all();
+    }
+
+
 }

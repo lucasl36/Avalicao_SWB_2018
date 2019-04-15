@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\activerecord;
+namespace app\models\db;
 
 use Yii;
 
@@ -28,12 +28,27 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'login', 'password', 'name'], 'required'],
+            [['login', 'password', 'name'], 'required'],
             [['id'], 'integer'],
             [['login', 'password'], 'string', 'max' => 255],
             [['name'], 'string', 'max' => 125],
             [['id'], 'unique'],
         ];
+    }
+
+    public static function filter($formModel)
+    {
+        return self::find()
+        ->andFilterCompare('login', $formModel->login, 'like')
+        ->andFilterCompare('name', $formModel->name, 'like')
+        ->all();
+    }
+
+    public static function findByLogin($login)
+    {
+        return self::find()
+        ->where(['login' => $login])
+        ->one();
     }
 
 }

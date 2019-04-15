@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\activerecord;
+namespace app\models\db;
 
 use Yii;
 
@@ -11,9 +11,9 @@ use Yii;
  * @property string $name
  * @property bool $active
  *
- * @property Address[] $tbAddresses
+ * @property Address[] $Addresses
  */
-class TypeAdress extends \yii\db\ActiveRecord
+class TypeAddress extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -29,7 +29,7 @@ class TypeAdress extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name'], 'required'],
+            [['name'], 'required'],
             [['id'], 'integer'],
             [['active'], 'boolean'],
             [['name'], 'string', 'max' => 125],
@@ -42,6 +42,15 @@ class TypeAdress extends \yii\db\ActiveRecord
      */
     public function getAddresses()
     {
-        return $this->hasMany(Address::className(), ['id_type_adress' => 'id']);
+        return $this->hasMany(Address::className(), ['id_type_address' => 'id']);
     }
+
+    public static function filter($formModel)
+    {
+        return self::find()
+        ->andFilterCompare('name', $formModel->name, 'like')
+        ->andFilterCompare('active', $formModel->active)
+        ->all();
+    }
+
 }
