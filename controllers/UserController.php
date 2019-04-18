@@ -18,7 +18,7 @@ class UserController extends ApiController
 
     public function behaviors()
     {
-        return [
+        return array_merge(parent::behaviors(), [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -29,7 +29,7 @@ class UserController extends ApiController
                     'validate' => ['post'],
                 ],
             ],
-        ];
+        ]);
     }
 
     public function actions()
@@ -124,11 +124,11 @@ class UserController extends ApiController
         $user = DbUser::findByLogin($model->login);
         if(empty($user))
         {
-            $this->sendResponse(500, 'User not found');   
+            $this->sendResponse(401, 'User not found');   
         }
         if(!Yii::$app->getSecurity()->validatePassword($model->password, $user->password))
         {
-            $this->sendResponse(500, 'Incorrect password');   
+            $this->sendResponse(401, 'Incorrect password');   
         }
         $response = UserMap::dbToLoginResponse($user);
         $this->sendResponse(200, $response);   

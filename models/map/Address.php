@@ -75,15 +75,17 @@ class Address
 
 	public static function dbToResponse($dbModelList)
 	{
-		$resultArr;
+		$resultArr = [];
 		foreach($dbModelList as $model)
 		{
+			$modelArr = [];
 			foreach($model->attributes as $attr => $value)
 			{
-				$resultArr[$model->id][$attr] = $value;
+				$modelArr[$attr] = $value;
 			}
 			$peoples = $model->getPeoples()->one();
-			$resultArr[$model->id]['name_people'] = $peoples->name;
+			$modelArr['name_people'] = $peoples->name;
+			$resultArr[] = $modelArr;
 		}
 		return $resultArr;
 	}

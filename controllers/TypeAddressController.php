@@ -17,7 +17,7 @@ class TypeAddressController extends ApiController
 
     public function behaviors()
     {
-        return [
+        return array_merge(parent::behaviors(), [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -27,7 +27,7 @@ class TypeAddressController extends ApiController
                     'list' => ['post'],
                 ],
             ],
-        ];
+        ]);
     }
 
     public function actions()

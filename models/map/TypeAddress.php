@@ -56,13 +56,15 @@ class TypeAddress
 
 	public static function dbToResponse($dbModelList)
 	{
-		$resultArr;
+		$resultArr = [];
 		foreach($dbModelList as $model)
 		{
+			$modelArr = [];
 			foreach($model->attributes as $attr => $value)
 			{
-				$resultArr[$model->id][$attr] = $value;
+				$modelArr[$attr] = $value;
 			}
+			$resultArr[] = $modelArr;
 		}
 		return $resultArr;
 	}
